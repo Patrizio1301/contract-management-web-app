@@ -1,0 +1,23 @@
+{
+  "name": "hercules-frontend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js "
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@quasar/extras": "^1.16.12",
+    "express": "^4.19.2",
+    "pip": "^0.0.1",
+    "quasar": "^2.16.9"
+  },
+  "devDependencies": {
+    "@quasar/vite-plugin": "^1.7.0",
+    "sass": "^1.33.0"
+  }
+}
