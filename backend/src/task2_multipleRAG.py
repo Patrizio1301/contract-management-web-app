@@ -6,6 +6,9 @@ from langchain_openai import ChatOpenAI
 import os
 
 
+
+
+
 def load_documents(documents):
     splitter = RecursiveCharacterTextSplitter(chunk_size=600, chunk_overlap=50)
     return splitter.create_documents(documents)
@@ -33,7 +36,7 @@ def financial_assessment(qa_chain, situation):
         f"Analyze the situation solely with attention to the contract’s budget conditions, permissible expenditures, exceptions, "
         f"and any relevant multipliers or adjustments. Specifically, determine whether the described expenditures fall within the budget by considering:\n"
         f"- The base budget limit for the expense.\n"
-        f"- cost units provided (one vs. multiple units) and multiply accordingly by the number. With multiple we mean more than one. State in the final answer, what has been assumed.\n"
+        f"- cost units provided (one vs. multiple units) and multiply accordingly by the number. With multiple we mean more than one which cloud be two or three or four or even more. State in the final answer, what has been assumed and maybe try out different scenarios if multiple is vage. If you assume a unit number, this makes the decision unclear if there is no clear unit number provided.\n"
         f"- Any relevant multipliers or adjustments(e.g.,for night and weekend travel, high-cost locations, peak seasons, or urgency surcharges) that should be applied based on the scenario.\n"
         f"- The proper sequential multiplication of applicable factors to calculate the final allowable budget.\n"
         f"When applying multiple factors, ensure they are multiplied in the correct order. If there is uncertainty about which multipliers apply, clearly state that and provide an explanation.\n\n"
@@ -42,16 +45,28 @@ def financial_assessment(qa_chain, situation):
     return qa_chain({"query": prompt})
 
 
-def non_financial_assessment(qa_chain, situation):
+def goal_assessment(qa_chain):
     prompt = (
-        f"Given the contract and the situation provided:\n\n"
-        f"Focus solely on non-financial aspects in determining whether the situation violates the contract or not.\n"
+        f"Could you please describe in a sentence the main objective and goal of the contract. What tasks does the contract involve if it is a service agreement?"
+    )
+    return qa_chain({"query": prompt})
+
+
+def non_financial_assessment(qa_chain, situation, goals):
+    prompt = (f"Given the contract and the situation provided:\n\n"
+        f"Focus solely on non-financial aspects in determining whether the situation violates the contract or not. This includes evaluating whether the expense reason is reasonably related to the contract’s main purpose or work.\n"
+        f"Determine whether the expense is reasonably related to the contract’s main purpose or work defined here: {goals} Specifically:"
+        f"Assess Expense Relevance: Determine whether the expense is reasonably related to the contract’s main purpose or work (is working location essential for the task to be done there; is the task itself related to the main "
+                f"objective; can the work be done remotely instead as for example mainly tasks in the digital world?). Specifically: Alignment with Objectives: "
+                        f"Assess if the expense is necessary and contributes to achieving the primary objectives of the contract. Consider if the "
+                        f"expenditure is essential for fulfilling the contract’s requirements or if it could be substituted with a less costly or more "
+                        f"appropriate alternative. This evaluation should be based on whether the expense supports the contract’s intended outcomes and overall goals. "        
         f"Do not assume non-compliance simply because information (like pre-approvals) is missing. If the situation does not explicitly state that a required action was missed or non-compliance occurred, you should assume compliance.\n"
         f"If you cannot determine non-compliance based on the available non-financial information, conclude that the situation does not violate the contract and provide recommendations for any additional information needed.\n\n"
         f"Decision Criteria:\n"
-        f"'Yes': The situation clearly violates the contract’s non-financial requirements (e.g., pre-approval processes, location-specific rules, reporting obligations).\n"
-        f"'No': The situation does not violate the contract’s non-financial requirements based on the available information. Missing information should not be treated as a sign of non-compliance unless the situation explicitly shows that something was not done according to the contract.\n"
-        f"'Unclear': Use this only if the contract’s non-financial terms are ambiguous, leading to genuine uncertainty in determining compliance.\n\n"
+        f"'Yes': The situation clearly violates the contract’s non-financial requirements (e.g., pre-approval processes, location-specific rules, reporting obligations) or the expense reason is not reasonably related to the contract’s main purpose or work."
+        f"'No': The situation does not violate the contract’s non-financial requirements based on the available information, and the expense reason is reasonably related to the contract’s main purpose or work. Missing information should not be treated as a sign of non-compliance unless the situation explicitly shows that something was not done according to the contract."
+        f"'Unclear': Use this only if the contract’s non-financial terms are ambiguous, leading to genuine uncertainty in determining compliance, or if it is unclear whether the expense reason is reasonably related to the contract’s main purpose or work."
         f"Situation: {situation}"
     )
     return qa_chain({"query": prompt})
@@ -103,10 +118,10 @@ def main_evaluation(documents, situation, api):
 
     # Run assessments
     financial_result = financial_assessment(qa_chain, situation)
-    non_financial_result = non_financial_assessment(qa_chain, situation)
+    goals = goal_assessment(qa_chain)
+    non_financial_result = non_financial_assessment(qa_chain, situation, goals=goals)
 
     # Perform final evaluation
     final_result = final_decision(qa_chain, financial_result, non_financial_result, situation)
 
     return final_result
-
