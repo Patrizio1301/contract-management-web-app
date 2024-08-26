@@ -116,7 +116,6 @@ function file_selected(files) {
 // Function to handle form submission
 async function onSubmit() {
   persistent.value = true
-  console.log("ALL GOOD BEFORE", selected_file, !selected_file.value);
 
   if (fileType.value === 'plain text' && !contract_content.value) {
     console.error('Plain text content is missing');
@@ -132,7 +131,6 @@ async function onSubmit() {
   // Check which file type is selected
   if (fileType.value.value === 'plain text') {
     // Directly create document with plain text content
-    console.log(contract_content)
     createDocument({ contract_content: contract_content.value });
     persistent.value = false
     step.value =1
@@ -142,11 +140,6 @@ async function onSubmit() {
     const url = 'https://sample-124107706411.europe-west1.run.app/upload';
     const fileData = new FormData(); // No arguments are passed here
     fileData.append('file', selected_file.value); // Manually append the file
-
-
-    console.log(fileData)
-
-    console.log("WE MADE IT")
 
     try {
       const response = await fetch(url, {
@@ -159,8 +152,6 @@ async function onSubmit() {
       }
 
       const result = await response.json();
-      console.log("THIS IS RESULT", result)
-      console.log("File content from server:", result.content);
 
       // Call createDocument with the content retrieved from the server
       createDocument({ contract_content: result.content });
@@ -168,7 +159,6 @@ async function onSubmit() {
       step.value =1
 
     } catch (error) {
-      console.log(error)
       console.error('There was a problem with the fetch operation:', error);
       persistent.value = false
     }
