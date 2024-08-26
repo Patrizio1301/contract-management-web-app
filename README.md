@@ -62,7 +62,7 @@ The application is available under the link: https://pirate-service-124107706411
 - *Task combination*: A third approach for the contract QA could be to leverage the information extraction from task 1 so that the retriever might be more efficent to do and might be more reliable. 
 - *Introduce more RAGs*: Another RAG system could solely focus on ambiguity and inform the system about things which are unclear. I tried to attach that but to obtain good results this might require more time.
 - *Generalization*: In the prompts main focus has been to enable meaningful answers with wise decisions and reasoning but to keep the prompts general for many contracts. This can be improved to identify different types of contracts and to write prompts for each of them. 
-- *Robustness*: Improvement of answers, to make sure that they are stable and do not variate too much. 
+- *Robustness*: Improvement of answers, to make sure that they are stable and do not variate too much. For example, This could be done by fine-tuning a model to legal texts and/or adding a specific reranker to the RAG systems. 
 - *Monitoring*: Create a monitoring and validation system. As for now, outputs have been validated manually. 
 
 - *Langchain*: Leverage more Langchain as the prompts and chain of prompts has been implemented "manually". 
