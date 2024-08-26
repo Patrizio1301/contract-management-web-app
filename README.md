@@ -88,4 +88,4 @@ The application is available under the link: https://pirate-service-124107706411
 
 ## Conclusion
 
-This project showcases a combination of modern technologies to create an efficient and scalable contract management tool. The design and implementation focus on simplicity, clarity, and ease of use, with potential for significant future enhancements. This README highlights the application of technology and methodology to solve complex problems in a straightforward way, demonstrating both technical competence and a commitment to continuous improvement.
+This project showcases a combination of modern technologies to create an efficient and scalable contract management tool. The design and implementation focus on simplicity, clarity, and ease of use, with potential for significant future enhancements. This README highlights the application of technology and methodology used and what further improvements could be implemented. 
