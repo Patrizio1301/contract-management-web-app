@@ -151,14 +151,10 @@ async function fetchAnswer(amount, description) {
   try {
     show_answer.value = true
     loading_answer.value = true
-    console.log(sentence)
-    console.log("CONTEEEEENT", selected_contract.value.value.contract_content)
     const requestBody = {
       documents: [selected_contract.value.value.contract_content], // Contract content as array
       query: sentence // The query input
     };
-
-    console.log(JSON.stringify(requestBody))
 
     const response = await fetch('https://sample-124107706411.europe-west1.run.app/ask', {
       method: 'POST',
@@ -173,7 +169,6 @@ async function fetchAnswer(amount, description) {
     }
 
     output.value = await response.json(); // Get the response as JSON
-    console.log("OUTPUTTTTT", output.value)
     loading_answer.value = false
   } catch (error) {
     console.error('Error processing contract:', error);
@@ -184,14 +179,12 @@ async function fetchAnswer(amount, description) {
 
 const fetchDocuments = async () => {
   try {
-    console.log("WE TRYYYY")
     const querySnapshot = await getDocs(numbersRef);
     // Map the documents to only include contract names
     contractNames.value = querySnapshot.docs.map(doc => ({
       label: doc.data().contract_name, // This will be shown in the dropdown
       value: doc.data() // You can use the document ID as the value
     }));
-    console.log("CONTRAAACT", contractNames.value)
   } catch (error) {
     console.error("Error fetching documents: ", error);
   }
@@ -220,15 +213,9 @@ function file_selected(files) {
 // Function to handle form submission
 async function onSubmit() {
   persistent.value = true
-  console.log("ALL GOOD BEFORE", selected_file, !selected_file.value);
   const url = 'https://sample-124107706411.europe-west1.run.app/upload_scenarios';
     const fileData = new FormData(); // No arguments are passed here
     fileData.append('file', selected_file.value); // Manually append the file
-
-
-    console.log(fileData)
-
-    console.log("WE MADE IT")
 
     try {
       const response = await fetch(url, {
@@ -242,14 +229,12 @@ async function onSubmit() {
 
       const result = await response.json();
       jsonData.value = result.content;
-      console.log("OUTPUT", jsonData.value)
 
       // Call createDocument with the content retrieved from the server
       persistent.value = false
       step.value =1
 
     } catch (error) {
-      console.log(error)
       console.error('There was a problem with the fetch operation:', error);
       persistent.value = false
     }
