@@ -65,6 +65,7 @@ The application is available under the link: https://pirate-service-124107706411
 - *Robustness*: Improvement of answers, to make sure that they are stable and do not variate too much. 
 - *Monitoring*: Create a monitoring and validation system. As for now, outputs have been validated manually. 
 
+- *Langchain*: Leverage more Langchain as the prompts and chain of prompts has been implemented "manually". 
 - *Components*: Leverage more the modular manner of creating Vue applications by creating components.
 - *Upload*: Relax restrictions on the csv file to be uploaded for the scenarios.  
 - *Data Management*: Leverage Pinia for better data storage. As for now data is deleted all the time...
